@@ -57,5 +57,6 @@ LIMIT 1;
 ---------------------------------------------------------------------
 
 Apologies for the formatting. I joined the course on the last day of Module 1 homework submissions, so I was a bit rushed. 
-Will try my best for the rest of the course.
+Will do my best for the rest of the course.
+
 
