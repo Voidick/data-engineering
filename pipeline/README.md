@@ -56,7 +56,7 @@ ORDER BY t.tip_amount DESC
 LIMIT 1;
 ---------------------------------------------------------------------
 
-Apologies for the formatting. I joined the course on the last day of Module 1 homework submissions, so I was a bit rushed. 
-Will do my best for the rest of the course.
+Apologies for the formatting. I joined the course on the last day of the Module 1 homework submission window, so I was a bit rushed and didn’t have time to complete the Terraform part.
+I’ll do my best for the rest of the course.
 
 
