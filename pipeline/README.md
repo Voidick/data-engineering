@@ -9,9 +9,6 @@ WHERE
     lpep_pickup_datetime >= '2025-11-01'
     AND lpep_pickup_datetime < '2025-12-01'
     AND trip_distance <= 1;
-
-Output: 8007
-
 ---------------------------------------------------------------------
 #4.
 SQL code for task:
@@ -23,7 +20,7 @@ WHERE trip_distance < 100
 GROUP BY DATE(lpep_pickup_datetime)
 ORDER BY max_trip_distance DESC
 LIMIT 1;
-
+---------------------------------------------------------------------
 #5.
 SQL code for task:
 SELECT
@@ -38,7 +35,7 @@ WHERE
 GROUP BY z."Zone"
 ORDER BY total_amount_sum DESC
 LIMIT 1;
-
+---------------------------------------------------------------------
 #6.
 SQL code for task:
 SELECT
@@ -57,4 +54,5 @@ WHERE
     AND t.lpep_pickup_datetime < '2025-12-01'
 ORDER BY t.tip_amount DESC
 LIMIT 1;
+
 
