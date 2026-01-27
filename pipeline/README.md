@@ -54,5 +54,6 @@ WHERE
     AND t.lpep_pickup_datetime < '2025-12-01'
 ORDER BY t.tip_amount DESC
 LIMIT 1;
+---------------------------------------------------------------------
 
 
