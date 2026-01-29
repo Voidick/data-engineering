@@ -1,22 +1,43 @@
-# Start with slim Python 3.13 image for smaller size
 FROM python:3.13.11-slim
 
-# Copy uv binary from official uv image
+# --- system deps (single layer) ---
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates curl gnupg apt-transport-https wget \
+ && rm -rf /var/lib/apt/lists/*
+
+# --- uv ---
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
-
-# Set working directory inside container
 WORKDIR /app
-
-# Add virtual environment to PATH
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy dependency files first (better caching)
-COPY "pyproject.toml" "uv.lock" ".python-version" ./
-# Install all dependencies (pandas, sqlalchemy, psycopg2)
+# --- python deps (cached) ---
+COPY pyproject.toml uv.lock .python-version ./
 RUN uv sync --locked
 
-# Copy ingestion script
-COPY ingest_data.py ingest_data.py 
+# --- Google Cloud CLI repo + install ---
+RUN set -eux; \
+  curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+    | gpg --dearmor -o /usr/share/keyrings/google-cloud.gpg; \
+  echo "deb [signed-by=/usr/share/keyrings/google-cloud.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+    > /etc/apt/sources.list.d/google-cloud-sdk.list; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends google-cloud-cli; \
+  rm -rf /var/lib/apt/lists/*
 
-# Set entry point to run the ingestion script
-ENTRYPOINT [ "python", "ingest_data.py" ]
+# --- HashiCorp repo + install Terraform ---
+# Option A (simple): install latest from repo
+RUN set -eux; \
+  wget -O- https://apt.releases.hashicorp.com/gpg \
+    | gpg --dearmor -o /usr/share/keyrings/hashicorp.gpg; \
+  . /etc/os-release; \
+  echo "deb [signed-by=/usr/share/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com ${UBUNTU_CODENAME} main" \
+    > /etc/apt/sources.list.d/hashicorp.list; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends terraform; \
+  rm -rf /var/lib/apt/lists/*
+
+# --- app code ---
+COPY ingest_data.py ./ingest_data.py
+
+# Default: interactive shell (best for DE workflows: terraform/gcloud/python)
+CMD ["bash"]
