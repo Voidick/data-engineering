@@ -25,12 +25,12 @@ RUN set -eux; \
   rm -rf /var/lib/apt/lists/*
 
 # --- HashiCorp repo + install Terraform ---
-# Option A (simple): install latest from repo
 RUN set -eux; \
   wget -O- https://apt.releases.hashicorp.com/gpg \
     | gpg --dearmor -o /usr/share/keyrings/hashicorp.gpg; \
   . /etc/os-release; \
-  echo "deb [signed-by=/usr/share/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com ${UBUNTU_CODENAME} main" \
+  CODENAME="${VERSION_CODENAME:-${UBUNTU_CODENAME}}"; \
+  echo "deb [signed-by=/usr/share/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com ${CODENAME} main" \
     > /etc/apt/sources.list.d/hashicorp.list; \
   apt-get update; \
   apt-get install -y --no-install-recommends terraform; \
